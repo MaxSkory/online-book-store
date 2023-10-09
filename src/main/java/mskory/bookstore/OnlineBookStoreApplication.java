@@ -27,7 +27,7 @@ public class OnlineBookStoreApplication {
             book.setIsbn("12345");
             book.setPrice(BigDecimal.TEN);
             bookRepository.save(book);
-            System.out.println(bookRepository.findAll());
+            System.out.println(bookRepository.getAll());
         };
     }
 }
