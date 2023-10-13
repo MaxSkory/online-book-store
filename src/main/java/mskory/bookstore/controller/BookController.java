@@ -1,5 +1,6 @@
 package mskory.bookstore.controller;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import mskory.bookstore.dto.BookDto;
@@ -24,7 +25,8 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping
-    public BookDto createBook(@RequestBody CreateBookRequestDto requestBook) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public BookDto create(@RequestBody @Valid CreateBookRequestDto requestBook) {
         return bookService.save(requestBook);
     }
 
@@ -44,7 +46,8 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public BookDto updateById(@PathVariable Long id, @RequestBody CreateBookRequestDto requestDto) {
+    public BookDto updateById(
+            @PathVariable Long id, @RequestBody @Valid CreateBookRequestDto requestDto) {
         return bookService.updateById(id, requestDto);
     }
 

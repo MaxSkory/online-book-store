@@ -1,9 +1,0 @@
-databaseChangeLog:
-  - changeSet:
-      id: add-scale-to-price-column-book-table
-      author: mskory
-      changes:
-        - modifyDataType:
-            tableName: books
-            columnName: price
-            newDataType: decimal(4,2)

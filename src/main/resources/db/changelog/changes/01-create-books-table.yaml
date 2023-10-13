@@ -28,9 +28,10 @@ databaseChangeLog:
                   type: varchar(255)
                   constraints:
                     nullable: false
+                    unique: true
               - column:
                   name: price
-                  type: numeric
+                  type: decimal(5,2)
                   constraints:
                     nullable: false
               - column:
