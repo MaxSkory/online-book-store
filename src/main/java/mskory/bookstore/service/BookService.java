@@ -4,9 +4,10 @@ import java.util.List;
 import mskory.bookstore.dto.BookDto;
 import mskory.bookstore.dto.BookSearchParameters;
 import mskory.bookstore.dto.CreateBookRequestDto;
+import org.springframework.data.domain.Pageable;
 
 public interface BookService {
-    List<BookDto> findAll();
+    List<BookDto> findAll(Pageable pageable);
 
     BookDto findById(Long id);
 

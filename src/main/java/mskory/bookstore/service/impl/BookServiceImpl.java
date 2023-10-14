@@ -11,6 +11,7 @@ import mskory.bookstore.model.Book;
 import mskory.bookstore.repository.SpecificationBuilder;
 import mskory.bookstore.repository.book.BookRepository;
 import mskory.bookstore.service.BookService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -28,8 +29,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> findAll() {
-        return repository.findAll().stream()
+    public List<BookDto> findAll(Pageable pageable) {
+        return repository.findAll(pageable).stream()
                 .map(bookMapper::toDto)
                 .toList();
     }
