@@ -78,6 +78,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         }
     }
 
+    @SuppressWarnings("unchecked")
     private List<String> createFieldErrorMessage(ProblemDetail problemDetail, FieldError error) {
         List<String> errorMessages = new ArrayList<>();
         Map<String, Object> errors = problemDetail.getProperties();
