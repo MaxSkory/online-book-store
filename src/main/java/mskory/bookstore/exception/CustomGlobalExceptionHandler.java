@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
@@ -58,8 +59,14 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return ResponseEntity.of(problemDetail).build();
     }
 
-    @ExceptionHandler(
-            {EntityNotFoundException.class,
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Object> handleSqlException(Exception ex) {
+        ProblemDetail problemDetail = getProblemDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        problemDetail.setProperty("error", ex.getMessage());
+        return ResponseEntity.of(problemDetail).build();
+    }
+
+    @ExceptionHandler({EntityNotFoundException.class,
             RoleNotFoundException.class,
             RegistrationException.class,
             UsernameNotFoundException.class,

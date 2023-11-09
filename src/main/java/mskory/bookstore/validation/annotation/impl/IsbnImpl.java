@@ -1,8 +1,8 @@
-package validation.annotation.impl;
+package mskory.bookstore.validation.annotation.impl;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import validation.annotation.Isbn;
+import mskory.bookstore.validation.annotation.Isbn;
 
 public class IsbnImpl implements ConstraintValidator<Isbn, String> {
     @Override

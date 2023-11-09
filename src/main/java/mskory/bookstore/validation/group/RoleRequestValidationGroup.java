@@ -1,4 +1,4 @@
-package validation.group;
+package mskory.bookstore.validation.group;
 
 public interface RoleRequestValidationGroup {
 }
