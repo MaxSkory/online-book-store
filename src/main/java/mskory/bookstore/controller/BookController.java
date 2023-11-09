@@ -50,7 +50,7 @@ public class BookController {
     @Operation(summary = "Get book by id",
             description = "Return book record from DB by provided id")
     @GetMapping("/{id}")
-    public BookDto getById(@PathVariable Long id) {
+    public BookDto findById(@PathVariable Long id) {
         return bookService.getById(id);
     }
 
