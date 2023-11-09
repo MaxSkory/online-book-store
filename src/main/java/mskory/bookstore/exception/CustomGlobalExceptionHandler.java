@@ -5,6 +5,7 @@ import java.net.URI;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +14,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -55,10 +58,14 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return ResponseEntity.of(problemDetail).build();
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<Object> handleEntityNotFound(
-            EntityNotFoundException ex) {
-        ProblemDetail problemDetail = getProblemDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+    @ExceptionHandler(
+            {EntityNotFoundException.class,
+            RoleNotFoundException.class,
+            RegistrationException.class,
+            UsernameNotFoundException.class,
+            BadCredentialsException.class})
+    public ResponseEntity<Object> handleEntityNotFound(Exception ex) {
+        ProblemDetail problemDetail = getProblemDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
         return ResponseEntity.of(problemDetail).build();
     }
 
@@ -71,15 +78,15 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     private void setError(ProblemDetail problemDetail, ObjectError error) {
         if (error instanceof FieldError fieldError) {
             String fieldName = ((FieldError) error).getField();
-            List<String> errorMessage = createFieldErrorMessage(problemDetail, fieldError);
-            problemDetail.setProperty(fieldName, errorMessage);
+            List<String> errorMessages = addFieldErrorMessage(problemDetail, fieldError);
+            problemDetail.setProperty(fieldName, errorMessages);
         } else {
             problemDetail.setProperty(error.getObjectName(), error.getDefaultMessage());
         }
     }
 
     @SuppressWarnings("unchecked")
-    private List<String> createFieldErrorMessage(ProblemDetail problemDetail, FieldError error) {
+    private List<String> addFieldErrorMessage(ProblemDetail problemDetail, FieldError error) {
         List<String> errorMessages = new ArrayList<>();
         Map<String, Object> errors = problemDetail.getProperties();
         if (errors != null && errors.containsKey(error.getField())) {
@@ -87,7 +94,11 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
             errorMessages.add(errorMessages.size() - 2, error.getDefaultMessage());
         } else {
             errorMessages.add(error.getDefaultMessage());
-            errorMessages.add("rejected value = " + error.getRejectedValue());
+            Object rejectedValue = error.getRejectedValue();
+            if (rejectedValue != null && rejectedValue.getClass().isArray()) {
+                rejectedValue = Arrays.toString((Object[]) rejectedValue);
+            }
+            errorMessages.add("rejected value = " + rejectedValue);
         }
         return errorMessages;
     }

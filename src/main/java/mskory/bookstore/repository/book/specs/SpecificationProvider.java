@@ -1,4 +1,4 @@
-package mskory.bookstore.repository;
+package mskory.bookstore.repository.book.specs;
 
 import org.springframework.data.jpa.domain.Specification;
 

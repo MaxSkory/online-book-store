@@ -1,4 +1,4 @@
-package mskory.bookstore.annotation;
+package validation.annotation;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.CONSTRUCTOR;
@@ -12,7 +12,7 @@ import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import mskory.bookstore.annotation.impl.IsbnImpl;
+import validation.annotation.impl.IsbnImpl;
 
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)

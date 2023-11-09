@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.4</version>
+        <version>3.1.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>mskory</groupId>
@@ -19,7 +19,8 @@
         <maven.checkstyle.plugin.configLocation>checkstyle.xml</maven.checkstyle.plugin.configLocation>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <lombok.mapstruct.binding.version>0.2.0</lombok.mapstruct.binding.version>
-        <springdoc.openapi.webmvc.ui.version>2.2.0</springdoc.openapi.webmvc.ui.version>
+        <springdoc.openapi.ui.version>2.2.0</springdoc.openapi.ui.version>
+        <java.jwt.version>4.4.0</java.jwt.version>
     </properties>
 
     <dependencies>
@@ -30,6 +31,16 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.yaml</groupId>
+                    <artifactId>snakeyaml</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -39,7 +50,18 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>${springdoc.openapi.webmvc.ui.version}</version>
+            <version>${springdoc.openapi.ui.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.yaml</groupId>
+                    <artifactId>snakeyaml</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>${java.jwt.version}</version>
         </dependency>
         <dependency>
             <groupId>com.mysql</groupId>
@@ -48,6 +70,7 @@
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -60,32 +83,59 @@
             <version>${mapstruct.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>2.2.220</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <exclude>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                            </exclude>
+                        </excludes>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>pre-integration-test</id>
+                            <goals>
+                                <goal>start</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>post-integration-test</id>
+                            <goals>
+                                <goal>stop</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.springdoc</groupId>
+                    <artifactId>springdoc-openapi-maven-plugin</artifactId>
+                    <version>1.4</version>
+                    <executions>
+                        <execution>
+                            <phase>integration-test</phase>
+                            <goals>
+                                <goal>generate</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>

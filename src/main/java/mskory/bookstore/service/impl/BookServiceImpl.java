@@ -3,13 +3,13 @@ package mskory.bookstore.service.impl;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import mskory.bookstore.dto.BookDto;
-import mskory.bookstore.dto.BookSearchParameters;
-import mskory.bookstore.dto.CreateBookRequestDto;
+import mskory.bookstore.dto.book.BookDto;
+import mskory.bookstore.dto.book.BookSearchParameters;
+import mskory.bookstore.dto.book.CreateBookRequestDto;
 import mskory.bookstore.mapper.BookMapper;
 import mskory.bookstore.model.Book;
-import mskory.bookstore.repository.SpecificationBuilder;
 import mskory.bookstore.repository.book.BookRepository;
+import mskory.bookstore.repository.book.specs.SpecificationBuilder;
 import mskory.bookstore.service.BookService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,24 +22,24 @@ public class BookServiceImpl implements BookService {
     private final BookMapper bookMapper;
 
     @Override
-    public BookDto save(CreateBookRequestDto requestBook) {
+    public BookDto create(CreateBookRequestDto requestBook) {
         Book mappedBook = bookMapper.toModel(requestBook);
         Book savedBook = repository.save(mappedBook);
         return bookMapper.toDto(savedBook);
     }
 
     @Override
-    public List<BookDto> findAll(Pageable pageable) {
+    public List<BookDto> getAll(Pageable pageable) {
         return repository.findAll(pageable).stream()
                 .map(bookMapper::toDto)
                 .toList();
     }
 
     @Override
-    public BookDto findById(Long id) {
-        Book book = repository.findById(id).orElseThrow(() ->
+    public BookDto getById(Long id) {
+        Book bookFromDb = repository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("There is no book by id " + id + " in the database"));
-        return bookMapper.toDto(book);
+        return bookMapper.toDto(bookFromDb);
     }
 
     @Override
