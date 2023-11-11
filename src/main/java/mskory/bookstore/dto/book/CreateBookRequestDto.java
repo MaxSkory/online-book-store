@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import lombok.Data;
 import lombok.NonNull;
-import mskory.bookstore.validation.annotation.Isbn;
+import mskory.bookstore.validation.Isbn;
 
 @Data
 public class CreateBookRequestDto {

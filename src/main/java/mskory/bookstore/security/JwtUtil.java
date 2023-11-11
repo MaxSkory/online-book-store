@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +20,7 @@ public class JwtUtil {
     @Value("${jwt.token.expiration.time}")
     private Long expirationTime;
 
-    public JwtUtil(@Value("$jwt.token.secret") String secret, @Autowired Encryptor encryptor) {
+    public JwtUtil(@Value("$jwt.token.secret") String secret, Encryptor encryptor) {
         this.algorithm = Algorithm.HMAC512(secret);
         this.verifier = JWT.require(algorithm).build();
         this.encryptor = encryptor;

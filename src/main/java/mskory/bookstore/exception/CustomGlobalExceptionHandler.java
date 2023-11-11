@@ -14,18 +14,16 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
@@ -39,17 +37,6 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return ResponseEntity.of(problemDetail).build();
     }
 
-    @Override
-    protected ResponseEntity<Object> handleExceptionInternal(
-            Exception ex,
-            Object body,
-            @NonNull HttpHeaders headers,
-            @NonNull HttpStatusCode statusCode,
-            @NonNull WebRequest request) {
-        ProblemDetail problemDetail = getProblemDetail(statusCode, ex.getMessage());
-        return ResponseEntity.of(problemDetail).build();
-    }
-
     @ExceptionHandler(SQLException.class)
     public ResponseEntity<Object> handleSqlException(SQLException ex) {
         ProblemDetail problemDetail = getProblemDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
@@ -59,18 +46,15 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return ResponseEntity.of(problemDetail).build();
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<Object> handleSqlException(Exception ex) {
-        ProblemDetail problemDetail = getProblemDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-        problemDetail.setProperty("error", ex.getMessage());
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Object> handleSqlException(AuthenticationException ex) {
+        ProblemDetail problemDetail = getProblemDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
         return ResponseEntity.of(problemDetail).build();
     }
 
     @ExceptionHandler({EntityNotFoundException.class,
             RoleNotFoundException.class,
-            RegistrationException.class,
-            UsernameNotFoundException.class,
-            BadCredentialsException.class})
+            RegistrationException.class})
     public ResponseEntity<Object> handleEntityNotFound(Exception ex) {
         ProblemDetail problemDetail = getProblemDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
         return ResponseEntity.of(problemDetail).build();
