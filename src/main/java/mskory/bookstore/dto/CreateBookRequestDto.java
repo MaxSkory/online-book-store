@@ -15,12 +15,12 @@ public class CreateBookRequestDto {
     private String title;
 
     @NonNull
-    @Pattern(regexp = "[A-Z][a-z]+(\\s[A-Z]([a-z])+\\s?){0,4}")
+    @Pattern(regexp = "[A-Z][a-z]+(\\s[A-Z]([a-z])+\\s?)*")
     private String author;
 
     @NonNull
     @Isbn
-    @Pattern(regexp = "(ISBN\\s)((97)[89][-\\s])?(\\d(-)?){9}\\d")
+    @Pattern(regexp = "(ISBN\\s)((97)[89]-)?(\\d(-)?){10}")
     private String isbn;
 
     @NonNull

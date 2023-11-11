@@ -1,7 +1,5 @@
 package mskory.bookstore.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +7,6 @@ import mskory.bookstore.dto.BookDto;
 import mskory.bookstore.dto.BookSearchParameters;
 import mskory.bookstore.dto.CreateBookRequestDto;
 import mskory.bookstore.service.BookService;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,52 +18,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Book management", description = "Allows to manage books table")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
     private final BookService bookService;
 
-    @Operation(summary = "Create new book", description = "Create new book record in DB")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public BookDto create(@RequestBody @Valid CreateBookRequestDto requestBook) {
         return bookService.save(requestBook);
     }
 
-    @Operation(summary = "Get book by id",
-            description = "Return book record from DB by provided id")
     @GetMapping("/{id}")
     public BookDto findById(@PathVariable Long id) {
         return bookService.findById(id);
     }
 
-    @Operation(summary = "Get multiple books",
-            description = "Get multiple books, "
-                    + "allow pagination and sorting, "
-                    + "20 books starts from id 1 by default ")
     @GetMapping
-    public List<BookDto> findAll(Pageable pageable) {
-        return bookService.findAll(pageable);
+    public List<BookDto> findAll() {
+        return bookService.findAll();
     }
 
-    @Operation(summary = "Search books", description = "Search books by author and price")
     @GetMapping("/search")
     public List<BookDto> search(BookSearchParameters params) {
         return bookService.search(params);
     }
 
-    @Operation(summary = "Update book by id",
-            description = "Update book with new provided fields by provided id")
     @PutMapping("/{id}")
     public BookDto updateById(
             @PathVariable Long id, @RequestBody @Valid CreateBookRequestDto requestDto) {
         return bookService.updateById(id, requestDto);
     }
 
-    @Operation(summary = "Delete book by id",
-            description = "Soft delete book record by provided id")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long id) {
