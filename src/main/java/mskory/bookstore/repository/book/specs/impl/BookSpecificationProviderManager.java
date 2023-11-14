@@ -1,11 +1,11 @@
-package mskory.bookstore.repository.book;
+package mskory.bookstore.repository.book.specs.impl;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import mskory.bookstore.model.Book;
-import mskory.bookstore.repository.SpecificationProvider;
-import mskory.bookstore.repository.SpecificationProviderManager;
+import mskory.bookstore.repository.book.specs.SpecificationProvider;
+import mskory.bookstore.repository.book.specs.SpecificationProviderManager;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor

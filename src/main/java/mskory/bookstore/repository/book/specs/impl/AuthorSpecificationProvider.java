@@ -1,14 +1,13 @@
-package mskory.bookstore.repository.book.specs;
+package mskory.bookstore.repository.book.specs.impl;
 
 import java.util.Arrays;
 import mskory.bookstore.model.Book;
-import mskory.bookstore.repository.SpecificationProvider;
+import mskory.bookstore.repository.book.specs.SpecificationProvider;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AuthorSpecificationProvider implements SpecificationProvider<Book> {
-
     @Override
     public String getKey() {
         return "authors";

@@ -1,17 +1,17 @@
 package mskory.bookstore.service;
 
 import java.util.List;
-import mskory.bookstore.dto.BookDto;
-import mskory.bookstore.dto.BookSearchParameters;
-import mskory.bookstore.dto.CreateBookRequestDto;
+import mskory.bookstore.dto.book.BookDto;
+import mskory.bookstore.dto.book.BookSearchParameters;
+import mskory.bookstore.dto.book.CreateBookRequestDto;
 import org.springframework.data.domain.Pageable;
 
 public interface BookService {
-    List<BookDto> findAll(Pageable pageable);
+    List<BookDto> getAll(Pageable pageable);
 
-    BookDto findById(Long id);
+    BookDto getById(Long id);
 
-    BookDto save(CreateBookRequestDto bookDto);
+    BookDto create(CreateBookRequestDto bookDto);
 
     BookDto updateById(Long id, CreateBookRequestDto requestDto);
 

@@ -1,12 +1,12 @@
-package mskory.bookstore.repository.book;
+package mskory.bookstore.repository.book.specs.impl;
 
 import java.lang.reflect.Field;
 import lombok.RequiredArgsConstructor;
 import mskory.bookstore.exception.DataProcessingException;
 import mskory.bookstore.model.Book;
-import mskory.bookstore.repository.SpecificationBuilder;
-import mskory.bookstore.repository.SpecificationProvider;
-import mskory.bookstore.repository.SpecificationProviderManager;
+import mskory.bookstore.repository.book.specs.SpecificationBuilder;
+import mskory.bookstore.repository.book.specs.SpecificationProvider;
+import mskory.bookstore.repository.book.specs.SpecificationProviderManager;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 

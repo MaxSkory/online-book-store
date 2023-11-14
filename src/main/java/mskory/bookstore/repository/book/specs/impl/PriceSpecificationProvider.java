@@ -1,8 +1,8 @@
-package mskory.bookstore.repository.book.specs;
+package mskory.bookstore.repository.book.specs.impl;
 
 import java.math.BigDecimal;
 import mskory.bookstore.model.Book;
-import mskory.bookstore.repository.SpecificationProvider;
+import mskory.bookstore.repository.book.specs.SpecificationProvider;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
