@@ -1,30 +1,30 @@
 package mskory.bookstore.dto.book;
 
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
-import lombok.Data;
-import lombok.NonNull;
+import java.util.Set;
 import mskory.bookstore.validation.Isbn;
 
-@Data
-public class CreateBookRequestDto {
-    @NonNull
-    @Size(min = 1, max = 30)
-    private String title;
-
-    @NonNull
-    @Pattern(regexp = "[A-Z][a-z]+(\\s[A-Z]([a-z])+\\s?){0,4}")
-    private String author;
-
-    @NonNull
-    @Isbn
-    private String isbn;
-
-    @NonNull
-    @Min(value = 1)
-    private BigDecimal price;
-    private String description;
-    private String coverImage;
+public record CreateBookRequestDto(
+        @NotNull
+        @Size(min = 1, max = 30)
+        String title,
+        @NotNull
+        @Pattern(regexp = "[A-Z][a-z]+(\\s[A-Z]([a-z])+\\s?){0,4}")
+        String author,
+        @NotNull
+        @Isbn
+        String isbn,
+        @NotNull
+        @Min(value = 1)
+        BigDecimal price,
+        String description,
+        String coverImage,
+        @NotEmpty
+        Set<Long> categoryIds
+) {
 }

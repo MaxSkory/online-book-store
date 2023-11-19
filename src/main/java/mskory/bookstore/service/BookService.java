@@ -2,6 +2,7 @@ package mskory.bookstore.service;
 
 import java.util.List;
 import mskory.bookstore.dto.book.BookDto;
+import mskory.bookstore.dto.book.BookDtoWithoutCategoryIds;
 import mskory.bookstore.dto.book.BookSearchParameters;
 import mskory.bookstore.dto.book.CreateBookRequestDto;
 import org.springframework.data.domain.Pageable;
@@ -17,5 +18,7 @@ public interface BookService {
 
     void deleteById(Long id);
 
-    List<BookDto> search(BookSearchParameters searchParameters);
+    List<BookDtoWithoutCategoryIds> search(BookSearchParameters searchParameters);
+
+    List<BookDtoWithoutCategoryIds> getBooksByCategoryId(Long categoryId);
 }

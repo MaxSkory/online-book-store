@@ -20,7 +20,7 @@ public class JwtUtil {
     @Value("${jwt.token.expiration.time}")
     private Long expirationTime;
 
-    public JwtUtil(@Value("$jwt.token.secret") String secret, Encryptor encryptor) {
+    public JwtUtil(@Value("${jwt.token.secret}") String secret, Encryptor encryptor) {
         this.algorithm = Algorithm.HMAC512(secret);
         this.verifier = JWT.require(algorithm).build();
         this.encryptor = encryptor;

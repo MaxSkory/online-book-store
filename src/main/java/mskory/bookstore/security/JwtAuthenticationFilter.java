@@ -11,15 +11,11 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import mskory.bookstore.config.SecurityConfig;
 import mskory.bookstore.exception.JwtAuthenticationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -32,13 +28,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String TOKEN_PREFIX = "Bearer ";
     private final UserDetailsService customUserDetailsService;
     private final JwtUtil jwtUtil;
-    private AuthenticationFailureHandler failureHandler;
     private List<AntPathRequestMatcher> excludedMatchers;
 
     @PostConstruct
     protected void init() {
-        failureHandler = new AuthenticationEntryPointFailureHandler(
-                new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
         excludedMatchers = Arrays.stream(SecurityConfig.getPermittedPaths())
                 .map(AntPathRequestMatcher::new)
                 .toList();
@@ -53,15 +46,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        String token = getTokenFromRequest(request);
-        try {
-            Authentication authentication = createAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            filterChain.doFilter(request, response);
-        } catch (Exception e) {
-            failureHandler.onAuthenticationFailure(request, response,
-                    new JwtAuthenticationException("JWT authentication failed!", e));
+        String token = request.getHeader(HEADER_NAME);
+        if (StringUtils.hasText(token) && token.startsWith(TOKEN_PREFIX)) {
+            try {
+                Authentication authentication = createAuthentication(parseToken(token));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (Exception e) {
+                throw new JwtAuthenticationException("JWT authentication failed!", e);
+            }
         }
+        filterChain.doFilter(request, response);
     }
 
     @Override
@@ -76,12 +70,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return new UsernamePasswordAuthenticationToken(subject, null, userDetails.getAuthorities());
     }
 
-    public String getTokenFromRequest(HttpServletRequest request) {
-        String authorizationHeader = request.getHeader(HEADER_NAME);
-        if (StringUtils.hasText(authorizationHeader)
-                && authorizationHeader.startsWith(TOKEN_PREFIX)) {
-            return authorizationHeader.substring(7);
-        }
-        return null;
+    private String parseToken(String token) {
+        return token.substring(TOKEN_PREFIX.length());
     }
 }
