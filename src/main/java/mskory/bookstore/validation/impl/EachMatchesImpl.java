@@ -15,6 +15,9 @@ public class EachMatchesImpl implements ConstraintValidator<EachMatches, String[
 
     @Override
     public boolean isValid(String[] value, ConstraintValidatorContext context) {
+        if (value == null) {
+            return true;
+        }
         return Arrays.stream(value).allMatch(s -> s.matches(regex));
     }
 }

@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import mskory.bookstore.dto.book.BookDto;
+import mskory.bookstore.dto.book.BookDtoWithoutCategoryIds;
 import mskory.bookstore.dto.book.BookSearchParameters;
 import mskory.bookstore.dto.book.CreateBookRequestDto;
 import mskory.bookstore.service.BookService;
@@ -50,13 +51,13 @@ public class BookController {
     @Operation(summary = "Get book by id",
             description = "Return book record from DB by provided id")
     @GetMapping("/{id}")
-    public BookDto findById(@PathVariable Long id) {
+    public BookDto getById(@PathVariable Long id) {
         return bookService.getById(id);
     }
 
-    @Operation(summary = "Search books", description = "Search books by author and price")
+    @Operation(summary = "Search books", description = "Search books by author, price, category")
     @GetMapping("/search")
-    public List<BookDto> search(@Valid BookSearchParameters params) {
+    public List<BookDtoWithoutCategoryIds> search(@Valid BookSearchParameters params) {
         return bookService.search(params);
     }
 
